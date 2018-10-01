@@ -31,7 +31,7 @@ public class CompanyController {
         return companyRepository.findById(id).orElse(null);
     }
 
-    @GetMapping("/all")
+    @GetMapping
     @PreAuthorize("hasRole('ROLE_PRODUCT_ADMIN')")
     public List<Company> findAll() {
         return companyRepository.findAll();
