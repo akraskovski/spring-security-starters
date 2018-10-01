@@ -23,10 +23,17 @@ repositories {
 }
 
 dependencies {
-    implementation('org.springframework.boot:spring-boot-starter-data-jpa')
     implementation('org.springframework.boot:spring-boot-starter-web')
+    implementation('org.springframework.boot:spring-boot-starter-security')
+    implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+    implementation("org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:${springBootVersion}")
+    implementation("org.springframework.boot:spring-boot-starter-jdbc")
+    implementation("com.h2database:h2:1.4.191")
     implementation('org.flywaydb:flyway-core')
+
     runtimeOnly('org.postgresql:postgresql')
+
     compileOnly('org.projectlombok:lombok')
+
     testImplementation('org.springframework.boot:spring-boot-starter-test')
 }

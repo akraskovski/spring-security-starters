@@ -13,12 +13,11 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         jdbc:
           lob.non_contextual_creation: true
-    database: postgresql
 
   flyway:
     enabled: false
