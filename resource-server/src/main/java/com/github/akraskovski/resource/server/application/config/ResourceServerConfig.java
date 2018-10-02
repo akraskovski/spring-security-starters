@@ -27,13 +27,16 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(final HttpSecurity http) throws Exception {
         http
-                .anonymous().disable()
+//                .anonymous().disable()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/**").access("#oauth2.hasScope('read')")
-                .antMatchers(HttpMethod.POST, "/**").access("#oauth2.hasScope('write')")
-                .antMatchers(HttpMethod.PATCH, "/**").access("#oauth2.hasScope('write')")
-                .antMatchers(HttpMethod.PUT, "/**").access("#oauth2.hasScope('write')")
-                .antMatchers(HttpMethod.DELETE, "/**").access("#oauth2.hasScope('write')")
+                .antMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
+                .and()
+                .antMatcher("/api/**").authorizeRequests().anyRequest().authenticated()
+//                .antMatchers(HttpMethod.GET, "/**").access("#oauth2.hasScope('read')")
+//                .antMatchers(HttpMethod.POST, "/**").access("#oauth2.hasScope('write')")
+//                .antMatchers(HttpMethod.PATCH, "/**").access("#oauth2.hasScope('write')")
+//                .antMatchers(HttpMethod.PUT, "/**").access("#oauth2.hasScope('write')")
+//                .antMatchers(HttpMethod.DELETE, "/**").access("#oauth2.hasScope('write')")
                 .and()
                 .exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
     }

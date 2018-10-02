@@ -15,7 +15,7 @@ import java.util.List;
  * REST API level for a {@link com.github.akraskovski.resource.server.domain.model.Company}.
  */
 @RestController
-@RequestMapping("/company")
+@RequestMapping("/api/company")
 public class CompanyController {
 
     private final CompanyRepository companyRepository;
