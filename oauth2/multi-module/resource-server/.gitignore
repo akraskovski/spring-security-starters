@@ -17,4 +17,10 @@
 *.iml
 *.ipr
 /out/
-/.directory
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
