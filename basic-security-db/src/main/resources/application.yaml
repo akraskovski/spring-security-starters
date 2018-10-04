@@ -1,0 +1,25 @@
+server:
+  port: 7777
+
+##################### Configuration as in default application with database connection... ##############################
+spring:
+  datasource:
+    jdbcUrl: jdbc:postgresql://localhost:5432/basic-auth-db
+    username: ${username}
+    password: ${password}
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+########################################################################################################################
+
+######## Security datasource configuration. It could be separate database built especially for user's storage.##########
+app:
+  security:
+    datasource:
+      jdbcUrl: jdbc:postgresql://localhost:5432/basic-auth-db
+      username: ${username}
+      password: ${password}
+#      jpa:
+#        hibernate:
+#          ddl-auto: update
+########################################################################################################################
