@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 
 /**
  * External security {@link javax.sql.DataSource} configuration.
+ * Could be used if you have different db and dao implementation for the security.
  */
 @Configuration
 public class SecurityDatabaseConfig {

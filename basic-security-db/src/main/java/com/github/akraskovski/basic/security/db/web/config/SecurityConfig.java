@@ -1,6 +1,5 @@
 package com.github.akraskovski.basic.security.db.web.config;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -12,8 +11,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import javax.sql.DataSource;
 
 /**
  * General security configuration class.
@@ -28,14 +25,11 @@ import javax.sql.DataSource;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UnauthorizedEntryPoint authenticationEntryPoint;
-    //TODO: create custom user details service
     private final UserDetailsService userDetailsService;
-    private final DataSource dataSource;
 
-    public SecurityConfig(final UnauthorizedEntryPoint authenticationEntryPoint, final UserDetailsService userDetailsService, @Qualifier("securityDataSource") final DataSource dataSource) {
+    public SecurityConfig(final UnauthorizedEntryPoint authenticationEntryPoint, final UserDetailsService userDetailsService) {
         this.authenticationEntryPoint = authenticationEntryPoint;
         this.userDetailsService = userDetailsService;
-        this.dataSource = dataSource;
     }
 
     @Bean
@@ -45,11 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
-        auth.jdbcAuthentication()
-                .dataSource(dataSource)
-                .passwordEncoder(passwordEncoder())
-                .and()
-                .userDetailsService(userDetailsService);
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
     @Override
