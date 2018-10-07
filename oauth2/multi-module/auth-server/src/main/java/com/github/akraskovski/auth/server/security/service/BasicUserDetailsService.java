@@ -4,7 +4,6 @@ import com.github.akraskovski.auth.server.domain.model.DomainUserDetails;
 import com.github.akraskovski.auth.server.domain.repository.UserDetailsRepository;
 import com.github.akraskovski.auth.server.security.model.ApplicationUserDetails;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
  * Implementation of the Spring Security {@link UserDetailsService}.
  */
 @Service
-@Primary
 @RequiredArgsConstructor
 public class BasicUserDetailsService implements UserDetailsService {
 

@@ -1,7 +1,7 @@
 package com.github.akraskovski.auth.server.security.config;
 
 import com.github.akraskovski.auth.server.domain.model.UserRole;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -14,22 +14,35 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.approval.ApprovalStore;
+import org.springframework.security.oauth2.provider.approval.JdbcApprovalStore;
+import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
+import org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
+import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
+
+import javax.sql.DataSource;
 
 @Configuration
 @EnableAuthorizationServer
 @Import(ServerSecurityConfig.class)
-@RequiredArgsConstructor
 public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
     private static final String RESOURCE_ID = "company_api";
-    private static final String CLIENT_ID = "your-client-id";
-    private static final String CLIENT_SECRET = "glory-to-the-heroes";
-    private static final String[] SCOPES = {"do-anything"};
+    private static final String CLIENT_ID = "curl-client";
+    private static final String CLIENT_SECRET = "your-client-secret";
+    private static final String[] SCOPES = {"do-anything", "read", "write"};
 
     private final AuthenticationManager authenticationManager;
-    private final UserDetailsService userDetailsService;
+    private final UserDetailsService basicUserDetailsService;
+    private final DataSource dataSource;
+
+    @Autowired
+    public AuthServerConfig(final AuthenticationManager authenticationManager, final UserDetailsService basicUserDetailsService, final DataSource dataSource) {
+        this.authenticationManager = authenticationManager;
+        this.basicUserDetailsService = basicUserDetailsService;
+        this.dataSource = dataSource;
+    }
 
     /**
      * Password encoder bean.
@@ -41,14 +54,19 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    /**
-     * Token store bean.
-     *
-     * @return created component
-     */
     @Bean
     public TokenStore tokenStore() {
-        return new InMemoryTokenStore();
+        return new JdbcTokenStore(dataSource);
+    }
+
+    @Bean
+    public ApprovalStore approvalStore() {
+        return new JdbcApprovalStore(dataSource);
+    }
+
+    @Bean
+    public AuthorizationCodeServices authorizationCodeServices() {
+        return new JdbcAuthorizationCodeServices(dataSource);
     }
 
     @Override
@@ -62,7 +80,6 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
                 .withClient(CLIENT_ID)
                 .secret(passwordEncoder().encode(CLIENT_SECRET))
                 .resourceIds(RESOURCE_ID)
-                // Here could be two other auth grant types: "authorization_code" and "implicit"
                 .authorizedGrantTypes("password", "refresh_token")
                 .authorities(UserRole.ROLE_ADMIN.name(), UserRole.ROLE_USER.name())
                 .scopes(SCOPES);
@@ -71,8 +88,10 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(final AuthorizationServerEndpointsConfigurer endpoints) {
         endpoints
-                .tokenStore(tokenStore())
+                .approvalStore(approvalStore())
+                .authorizationCodeServices(authorizationCodeServices())
+                .userDetailsService(basicUserDetailsService)
                 .authenticationManager(authenticationManager)
-                .userDetailsService(userDetailsService);
+                .tokenStore(tokenStore());
     }
 }
