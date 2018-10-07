@@ -37,7 +37,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         }
 
         // In this line calling third-party authentication provider/user's storage provider occurs.
-        // The result of "login" must be existing user with roles or an Exception.
+        // The result of "login" must be existing user with authorities or an Exception.
         final ApplicationUserDetails userDetails = mockAuthProvider(username, password);
 
         return new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());

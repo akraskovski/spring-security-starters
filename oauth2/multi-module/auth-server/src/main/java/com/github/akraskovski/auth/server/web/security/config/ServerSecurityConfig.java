@@ -1,8 +1,9 @@
-package com.github.akraskovski.auth.server.security.config;
+package com.github.akraskovski.auth.server.web.security.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -16,11 +17,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 @EnableWebSecurity
 public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserDetailsService basicUserDetailsService;
+    private final UserDetailsService customUserDetailsService;
 
     @Autowired
-    public ServerSecurityConfig(final UserDetailsService basicUserDetailsService) {
-        this.basicUserDetailsService = basicUserDetailsService;
+    public ServerSecurityConfig(final UserDetailsService customUserDetailsService) {
+        this.customUserDetailsService = customUserDetailsService;
     }
 
     /**
@@ -38,10 +39,10 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/user/signUp").permitAll()
+                .antMatchers(HttpMethod.POST, "/user/signUp").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .userDetailsService(basicUserDetailsService)
+                .userDetailsService(customUserDetailsService)
                 .httpBasic();
     }
 }

@@ -3,7 +3,7 @@ package com.github.akraskovski.basic.security.db.domain.model;
 import lombok.Getter;
 
 /**
- * Application roles, which can be applied to a {@link User}.
+ * Application authorities, which can be applied to a {@link User}.
  */
 public enum Authority {
 

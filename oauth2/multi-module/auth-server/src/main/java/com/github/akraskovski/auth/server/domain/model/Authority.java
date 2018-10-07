@@ -3,9 +3,9 @@ package com.github.akraskovski.auth.server.domain.model;
 import lombok.Getter;
 
 /**
- * Application roles, which can be applied to a {@link DomainUserDetails}.
+ * Application authorities, which can be applied to a {@link User}.
  */
-public enum UserRole {
+public enum Authority {
 
     ROLE_ADMIN("Administrator"),
     ROLE_USER("User");
@@ -13,7 +13,7 @@ public enum UserRole {
     @Getter
     private String description;
 
-    UserRole(final String description) {
+    Authority(final String description) {
         this.description = description;
     }
 }

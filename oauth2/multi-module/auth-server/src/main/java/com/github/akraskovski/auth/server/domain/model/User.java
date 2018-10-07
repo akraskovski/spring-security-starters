@@ -1,8 +1,6 @@
 package com.github.akraskovski.auth.server.domain.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -18,11 +16,9 @@ import java.util.Set;
 /**
  * Domain model used for securing app.
  */
-@Entity
-@Getter
-@Setter
-@EqualsAndHashCode
-public class DomainUserDetails {
+@Entity(name = "domain_user_details")
+@Data
+public class User {
 
     @Id
     @GeneratedValue
@@ -36,5 +32,5 @@ public class DomainUserDetails {
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     @NotNull
-    private Set<UserRole> roles;
+    private Set<Authority> authorities;
 }

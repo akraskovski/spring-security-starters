@@ -28,9 +28,11 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-data-jpa')
     implementation("org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:${springBootVersion}")
 
-    runtimeOnly('org.postgresql:postgresql')
-
     compileOnly('org.projectlombok:lombok')
+    compileOnly('net.sf.dozer:dozer:5.5.1')
+
+    runtimeOnly('org.flywaydb:flyway-core')
+    runtimeOnly('org.postgresql:postgresql')
 
     testImplementation('org.springframework.boot:spring-boot-starter-test')
 }

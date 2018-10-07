@@ -20,5 +20,6 @@ spring:
           lob.non_contextual_creation: true
 
   flyway:
-    enabled: false
+    baseline-on-migrate: true
+    schemas: public
 ###################################################################

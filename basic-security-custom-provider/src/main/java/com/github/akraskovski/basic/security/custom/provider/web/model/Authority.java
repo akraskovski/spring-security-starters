@@ -3,7 +3,7 @@ package com.github.akraskovski.basic.security.custom.provider.web.model;
 import lombok.Getter;
 
 /**
- * Application roles, which can be applied to a {@link User}.
+ * Application authorities, which can be applied to User.
  */
 public enum Authority {
 
