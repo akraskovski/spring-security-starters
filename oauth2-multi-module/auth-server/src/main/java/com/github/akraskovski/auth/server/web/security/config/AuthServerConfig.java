@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -31,23 +30,18 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService basicUserDetailsService;
+    private final PasswordEncoder passwordEncoder;
     private final DataSource dataSource;
 
     @Autowired
-    public AuthServerConfig(final AuthenticationManager authenticationManager, final UserDetailsService basicUserDetailsService, final DataSource dataSource) {
+    public AuthServerConfig(final AuthenticationManager authenticationManager,
+                            final UserDetailsService basicUserDetailsService,
+                            final DataSource dataSource,
+                            final PasswordEncoder passwordEncoder) {
         this.authenticationManager = authenticationManager;
         this.basicUserDetailsService = basicUserDetailsService;
         this.dataSource = dataSource;
-    }
-
-    /**
-     * Password encoder bean.
-     *
-     * @return created component
-     */
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Bean
@@ -57,14 +51,14 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Override
     public void configure(final AuthorizationServerSecurityConfigurer security) {
-        security.passwordEncoder(passwordEncoder());
+        security.passwordEncoder(passwordEncoder);
     }
 
     @Override
     public void configure(final ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory()
                 .withClient(CLIENT_ID)
-                .secret(passwordEncoder().encode(CLIENT_SECRET))
+                .secret(passwordEncoder.encode(CLIENT_SECRET))
                 .resourceIds(RESOURCE_ID)
                 .authorizedGrantTypes("password", "refresh_token")
                 .authorities(Authority.ROLE_ADMIN.name(), Authority.ROLE_USER.name())

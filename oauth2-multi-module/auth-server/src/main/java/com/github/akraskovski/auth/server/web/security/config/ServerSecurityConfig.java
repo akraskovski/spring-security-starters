@@ -39,10 +39,12 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/user/signUp").permitAll()
+                .antMatchers(HttpMethod.POST, "/user/sign-up").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .userDetailsService(customUserDetailsService)
-                .httpBasic();
+                .httpBasic()
+                .and()
+                .csrf().disable();
     }
 }
