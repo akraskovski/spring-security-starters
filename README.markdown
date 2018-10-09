@@ -1,4 +1,5 @@
-#Spring security starters
+Spring security starters
+=========================
 
 This repository contains all necessary spring based security bootstraps to be included in your application.
 All applications based on latest spring boot 2.0.5 version, including all required libraries to secure RESTful API.

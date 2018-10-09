@@ -1,5 +1,8 @@
 package com.github.akraskovski.resource.server.application.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -24,18 +27,20 @@ import javax.sql.DataSource;
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
-    private static final String RESOURCE_ID = "company_api";
+    private final DataSource authServerDataSource;
 
-    @Bean
-    @ConfigurationProperties(prefix = "auth.datasource")
-    public DataSource authServerDataSource() {
-        return DataSourceBuilder.create().build();
+    @Value("${resource.id:company_api}")
+    private String resourceId;
+
+    @Autowired
+    public ResourceServerConfig(@Qualifier("authServerDataSource") final DataSource dataSource) {
+        this.authServerDataSource = dataSource;
     }
 
     @Override
     public void configure(final ResourceServerSecurityConfigurer resources) {
-        final TokenStore tokenStore = new JdbcTokenStore(authServerDataSource());
-        resources.resourceId(RESOURCE_ID).tokenStore(tokenStore);
+        final TokenStore tokenStore = new JdbcTokenStore(authServerDataSource);
+        resources.resourceId(resourceId).tokenStore(tokenStore);
     }
 
     @Override
@@ -43,7 +48,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         http.antMatcher("/api/**")
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/api/company").access("#oauth2.hasScope('read')")
-                .anyRequest().permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
     }

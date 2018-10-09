@@ -8,10 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.dozer.Mapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,6 +27,12 @@ public class UserController {
     private final UserService userService;
     private final Mapper mapper;
 
+    /**
+     * Sign up response entity.
+     *
+     * @param signUpUser the sign up user
+     * @return the response entity
+     */
     @PostMapping("/sign-up")
     public ResponseEntity<IdDto> signUp(@RequestBody @Valid final SignUpUser signUpUser) {
         final User registeredUser = userService.signUp(mapper.map(signUpUser, User.class));
@@ -36,6 +40,11 @@ public class UserController {
         return ResponseEntity.ok(new IdDto(registeredUser.getId()));
     }
 
+    /**
+     * Me response entity.
+     *
+     * @return the response entity
+     */
     @GetMapping("/me")
     public ResponseEntity<String> me() {
         final Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

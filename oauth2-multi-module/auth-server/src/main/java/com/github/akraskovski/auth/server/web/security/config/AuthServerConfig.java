@@ -18,6 +18,13 @@ import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 
 import javax.sql.DataSource;
 
+/**
+ * Spring OAuth2.0 Authorization Server configuration. Using InMemory client details(could be configured to store
+ * in preconfigured DB structure).
+ * <p>
+ * Token store is used with JDBC datasource, hence resource server could use stored in DB token
+ * to authorize client(or could be configured to call this Auth server via Spring API: /token/authorize)
+ */
 @Configuration
 @EnableAuthorizationServer
 @Import(ServerSecurityConfig.class)
@@ -29,17 +36,17 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
     private static final String[] CLIENT_SCOPES = {"read", "write"};
 
     private final AuthenticationManager authenticationManager;
-    private final UserDetailsService basicUserDetailsService;
+    private final UserDetailsService customUserDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final DataSource dataSource;
 
     @Autowired
     public AuthServerConfig(final AuthenticationManager authenticationManager,
-                            final UserDetailsService basicUserDetailsService,
+                            final UserDetailsService customUserDetailsService,
                             final DataSource dataSource,
                             final PasswordEncoder passwordEncoder) {
         this.authenticationManager = authenticationManager;
-        this.basicUserDetailsService = basicUserDetailsService;
+        this.customUserDetailsService = customUserDetailsService;
         this.dataSource = dataSource;
         this.passwordEncoder = passwordEncoder;
     }
@@ -68,7 +75,7 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(final AuthorizationServerEndpointsConfigurer endpoints) {
         endpoints
-                .userDetailsService(basicUserDetailsService)
+                .userDetailsService(customUserDetailsService)
                 .authenticationManager(authenticationManager)
                 .tokenStore(tokenStore());
     }
