@@ -11,7 +11,7 @@ Various of security types will be increased.
 ------------------------------------------------------
 
 Prerequisites:
-* Java 8 (not tested on latest > 8 versions)
+* Java 8
 * Maven 3.5.4 / Gradle 4.10.1 (or use wrappers)
 * PostgreSQL 10.5.1 (needed in some modules)
 
@@ -19,11 +19,11 @@ Prerequisites:
 
 Security starters:
 
-1. [Basic security]()
-2. [Basic security with third-party authentication provder]()
-3. [Basic security with jdbc connection]()
+1. [Basic security](https://github.com/akraskovski/spring-security-starters/tree/master/basic-security)
+2. [Basic security with jdbc connection](https://github.com/akraskovski/spring-security-starters/tree/master/basic-security-custom-provider)
+3. [Basic security with third-party authentication provider](https://github.com/akraskovski/spring-security-starters/tree/master/basic-security-db)
 4. *TBD: JWT based security*
-5. [OAuth 2.0 with independent resource and authorization servers]()
+5. [OAuth 2.0 with independent resource and authorization servers](https://github.com/akraskovski/spring-security-starters/tree/master/oauth2-multi-module)
 
 
 
