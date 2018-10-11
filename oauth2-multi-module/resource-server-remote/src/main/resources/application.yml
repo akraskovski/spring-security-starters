@@ -8,7 +8,7 @@ resource:
 ############## Resource-server database ###########################################
 spring:
   datasource:
-    jdbcUrl: jdbc:postgresql://localhost:5432/oauth2-resource-server
+    url: jdbc:postgresql://localhost:5432/oauth2-resource-server
     username: postgres
     password: root
 
@@ -20,17 +20,11 @@ spring:
           lob.non_contextual_creation: true
 ###################################################################
 
-############## Auth-server database ###########################################
+############## Auth-server connection ###########################################
 auth:
-  datasource:
-    jdbcUrl: jdbc:postgresql://localhost:5432/oauth2-auth-server
-    username: postgres
-    password: root
-
-  jpa:
-    show-sql: true
-    properties:
-      hibernate:
-        jdbc:
-          lob.non_contextual_creation: true
+  server:
+    connection:
+      url: http://localhost:7777/oauth/check_token
+      clientId: curl-client
+      clientSecret: your-client-secret
 ###################################################################
